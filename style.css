@@ -1,0 +1,184 @@
+html {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+body {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-size: 12px;
+  min-width: 500px;
+  min-height: 300px;
+}
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+#settings {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  z-index: 999;
+}
+#settings > label,
+#settings > button {
+  display: block;
+  width: 200px;
+  margin: 20px auto;
+  line-height: 30px;
+}
+#settings input {
+  box-sizing: border-box;
+  display: block;
+  width: 200px;
+  height: 30px;
+}
+#settings input[type="color"]{
+  padding: 0;
+  border: 0 none;
+}
+#confirm-settings,
+#cancel-settings {
+  border: 0 none;
+  text-align: center;
+  background: rgba(0,0,0,0.25);
+  cursor: pointer;
+}
+#settings > button#cancel-settings {
+  display: none;
+}
+
+canvas {
+  position: absolute;
+}
+#chat-panel {
+  box-sizing: border-box;
+  width: 20%;
+  min-width: 200px;
+  line-height: 20px;
+  height: 100%;
+  border-left: 1px solid transparent;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding-bottom: 30px;
+}
+#message {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-y: auto;
+}
+#message li {
+  list-style: none;
+  padding: 5px;
+}
+#message li.system {
+  background-color: rgba(0,0,0,0.25);
+}
+#content {
+  box-sizing: border-box;
+  padding-left: 0.5em;
+  height: 30px;
+  width: calc(100% - 30px);
+  background-color: transparent;
+  border: 0 none;
+  border-top: 1px solid transparent;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+#submit {
+  box-sizing: border-box;
+  height: 30px;
+  width: 30px;
+  color: white;
+  border: 0 none;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+#controls {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  color: white;
+}
+#out-game-controls,
+#in-game-controls,
+#ready,
+#unready {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+#unready,
+#in-game-controls {
+  display: none;
+}
+#ready,
+#unready {
+  cursor: pointer;
+}
+#unready {
+  background-color: rgba(0,0,0,0.25);
+}
+#surrender,
+#skip {
+  position: absolute;
+  bottom: 0;
+  width: 10%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.25);
+  cursor: pointer;
+}
+#surrender {
+  left: 0;  
+}
+#skip {
+  right: 0;
+}
+#progress {
+  width: 80%;
+  height: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+#progress-inner {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#change-settings {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: -30px;
+  left: 30px;
+  background-color: rgba(0,0,0,0.25);
+  cursor: pointer;
+}
+#background-color {
+  cursor: pointer;
+  position: absolute;
+  top: -30px;
+  left: 0;
+  box-sizing: border-box;
+  display: block;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0 none;
+}
