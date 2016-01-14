@@ -75,6 +75,18 @@ function initSocket() {
   socket.on('update', function (data) {
     if ('active' in data) {
       handleProgress(data.active);
+      if (data.active === window.game.index) {
+        var oldTitle = document.title;
+        window.blink = setInterval(function () {
+          document.title = (document.title === oldTitle) ? '轮到你了！' : oldTitle;
+          if (document.hasFocus()) {
+            document.title = oldTitle;
+            clearInterval(window.blink);
+          }
+        }, 1000);
+      } else {
+        clearInterval(window.blink);
+      }
     }
   });
   socket.on('gameOver', function (winner) {
@@ -126,6 +138,9 @@ function initListeners() {
     initBackgroundColor();
   });
   window.addEventListener('resize', resize);
+  window.onbeforeunload = function () {
+    return '确认离开？';
+  };
 }
 function initBackgroundColor() {
   localStorage.backgroundColor = localStorage.backgroundColor || '#ffffff';
@@ -177,7 +192,5 @@ function parseQuery(qstr) {
 
 /* todo
  * 选择类型
- * 离开确认
- * 桌面通知
  * 成就
  */

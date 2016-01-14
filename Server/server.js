@@ -17,20 +17,19 @@ LiuLuDing.emitter.on('connection', socket => {
 function handleConnect(socket, Game) {
   socket.on('join', player => {
     socket.player = player;
-    let idleRoom = Game.rooms.findIndex(room => !room.isInGame && room.length < Game.seats);
-    if (idleRoom === -1) {
-      idleRoom = Game.rooms.push([socket]) - 1;
+    socket.room = Game.rooms.findIndex(room => !room.isInGame && room.length < Game.seats);
+    if (socket.room === -1) {
+      socket.room = Game.rooms.push([socket]) - 1;
     } else {
-      Game.rooms[idleRoom].push(socket);
+      Game.rooms[socket.room].push(socket);
     }
-    socket.room = idleRoom;
-    socket.join(idleRoom);
+    socket.join(socket.room);
     Game.emitter.to(socket.room).emit('chat', {
       class: 'system join',
-      content: `${socket.player.name}进入了房间`,
+      content: `${socket.player.name}进入了房间，目前房间里有${Game.rooms[socket.room].map(socket => socket.player.name).join('，') }`,
       color: socket.player.color,
     });
-    preStart(idleRoom);
+    preStart(socket.room);
   });
 
   socket.on('ready', () => {
@@ -63,22 +62,22 @@ function handleConnect(socket, Game) {
     }
     Game.emitter.to(socket.room).emit('chat', {
       class: 'user',
-      content,
+      content: content.replace(/<[^>]+>/g, ''),
       sender: socket.player.name,
       color: socket.player.color,
     });
   });
 
   socket.on('disconnect', () => {
-    Game.emitter.to(socket.room).emit('chat', {
-      class: 'system leave',
-      content: `${socket.player.name}离开了房间`,
-      color: socket.player.color,
-    });
-    clearTimeout(Game.rooms[socket.room].timeout);
     const i = Game.rooms[socket.room].indexOf(socket);
     Game.rooms[socket.room].splice(i, 1);
     socket.leave(socket.room);
+    Game.emitter.to(socket.room).emit('chat', {
+      class: 'system leave',
+      content: `${socket.player.name}离开了房间，目前房间里有${Game.rooms[socket.room].map(socket => socket.player.name).join('，') }`,
+      color: socket.player.color,
+    });
+    clearTimeout(Game.rooms[socket.room].timeout);
     delete socket.room;
   });
 
