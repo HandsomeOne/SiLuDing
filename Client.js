@@ -110,7 +110,7 @@ SiLuDingClient.prototype = {
     if (self.active !== self.index) {
       return;
     }
-    var d = self.canvas.height / 4;
+    var d = self.canvas.clientHeight / 4;
     var x = e.clientX - self.canvas.getBoundingClientRect().left;
     var y = e.clientY - self.canvas.getBoundingClientRect().top;
     var i = Math.floor(y / d);
@@ -194,7 +194,7 @@ LiuLuDingClient.prototype = assign(Object.create(SiLuDingClient.prototype), {
       return;
     }
     var sin60 = Math.sqrt(3) / 2;
-    var d = self.canvas.height / 7;
+    var d = self.canvas.clientHeight / 7;
     var x = e.clientX - self.canvas.getBoundingClientRect().left;
     var y = e.clientY - self.canvas.getBoundingClientRect().top;
     var i = Math.floor((y / d - 3.5) / sin60 + 3.5);
