@@ -5,8 +5,9 @@
   <meta charset="utf-8">
   <title></title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <link rel="stylesheet" href="style.css">
-  <script src="socket.io.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/font-awesome.min.css">
+  <script src="js/socket.io.js"></script>
 </head>
 
 <body>
@@ -25,14 +26,14 @@
     <ul id="message"></ul>
     <form id="chat">
       <input id="content" type="text" autocomplete="off">
-      <button id="submit" type="submit">📩</button>
+      <button id="submit" type="submit"><i class="fa fa-paper-plane"></i></button>
     </form>
   </div>
   <div id="controls">
     <input id="background-color" type="color" value="#ffffff">
     <div id="out-game-controls">
       <div id="change-settings">
-        🔧
+        <i class="fa fa-cog fa-lg"></i>
       </div>
       <div id="ready">
         准备
@@ -49,8 +50,8 @@
       <div id="skip">跳过</div>
     </div>
   </div>
-  <script src="Client.js"></script>
-  <script src="main.js"></script>
+  <script src="js/Client.js"></script>
+  <script src="js/main.js"></script>
 </body>
 
 </html>

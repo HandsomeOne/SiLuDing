@@ -67,7 +67,7 @@ function initSocket() {
   socket.on('chat', function (data) {
     var li = document.createElement('li');
     data.class && (li.className = data.class);
-    li.innerHTML = (data.sender || '系统消息') + '：' + data.content;
+    li.innerHTML = (data.sender ? data.sender + '：' : '<i class="fa fa-info-circle fa-lg"></i> ') + data.content;
     data.color && (li.style.color = data.color);
     $('#message').appendChild(li);
     li.scrollIntoView();
