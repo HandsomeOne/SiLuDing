@@ -26,13 +26,13 @@
     <ul id="message"></ul>
     <form id="chat">
       <input id="content" type="text" autocomplete="off">
-      <button id="submit" type="submit"><i class="fa fa-paper-plane"></i></button>
+      <button id="submit" type="submit" title="发送"><i class="fa fa-paper-plane"></i></button>
     </form>
   </div>
   <div id="controls">
-    <input id="background-color" type="color" value="#ffffff">
+    <input id="background-color" type="color" value="#ffffff" title="更改背景">
     <div id="out-game-controls">
-      <div id="change-settings">
+      <div id="change-settings" title="设置">
         <i class="fa fa-cog fa-lg"></i>
       </div>
       <div id="ready">
@@ -43,11 +43,11 @@
       </div>
     </div>
     <div id="in-game-controls">
-      <div id="surrender">投降</div>
+      <div id="surrender" title="投降"><i class="fa fa-flag"></i></div>
       <div id="progress">
         <div id="progress-inner"></div>
       </div>
-      <div id="skip">跳过</div>
+      <div id="skip" title="跳过"><i class="fa fa-arrow-circle-right fa-lg"></i></div>
     </div>
   </div>
   <script src="js/Client.js"></script>
