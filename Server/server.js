@@ -17,6 +17,7 @@ LiuLuDing.emitter.on('connection', socket => {
 function handleConnect(socket, Game) {
   socket.on('join', player => {
     socket.player = player;
+    socket.player.name = socket.player.name.replace(/<[^>]+>/g, '');
     socket.room = Game.rooms.findIndex(room => !room.isInGame && room.length < Game.seats);
     if (socket.room === -1) {
       socket.room = Game.rooms.push([socket]) - 1;
