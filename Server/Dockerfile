@@ -2,6 +2,8 @@ FROM node:4
 MAINTAINER handsomeOne <anthony_nju@foxmail.com>
 EXPOSE 9527
 
-RUN npm install socket.io && npm install forever
+WORKDIR /app
+RUN npm install socket.io && npm install forever -g
+COPY . /app
 
-CMD forever start server.js
+ENTRYPOINT forever start server.js
