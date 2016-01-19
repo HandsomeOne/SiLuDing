@@ -24,8 +24,9 @@ input::-moz-focus-inner {
   width: 100%;
   height: 100%;
   background-color: white;
-  z-index: 999;
+  z-index: 9;
 }
+#type-select > p,
 #settings > label,
 #settings > button {
   display: block;
@@ -50,8 +51,29 @@ input::-moz-focus-inner {
   background: rgba(0,0,0,0.25);
   cursor: pointer;
 }
-#settings > button#cancel-settings {
+#settings > #cancel-settings {
   display: none;
+}
+
+#type-select {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  z-index: 19;
+  display: none;
+}
+#type-select > a {
+  text-align: center;
+  text-decoration: none;
+  color: black;
+  background: rgba(0,0,0,0.25);
+  display: block;
+  width: 200px;
+  margin: 20px auto;
+  line-height: 30px;
 }
 
 canvas {
@@ -94,7 +116,7 @@ canvas {
   bottom: 0;
   left: 0;
 }
-#submit {
+#send {
   box-sizing: border-box;
   height: 30px;
   width: 30px;
@@ -161,28 +183,29 @@ canvas {
   height: 100%;
 }
 
-#change-settings {
+#change-settings,
+#change-type,
+#background-color {
   width: 30px;
   height: 30px;
   position: absolute;
   top: -30px;
   left: 30px;
-  background-color: rgba(0,0,0,0.75);
+  background-color: rgba(0,0,0,0.25);
   cursor: pointer;
 }
 #change-settings:hover .fa {
   -webkit-animation: fa-spin 2s infinite linear;
   animation: fa-spin 2s infinite linear;
 }
+#change-settings {
+  background-color: rgba(0,0,0,0.5);
+  left: 60px;
+}
 #background-color {
-  cursor: pointer;
-  position: absolute;
-  top: -30px;
   left: 0;
   box-sizing: border-box;
   display: block;
-  width: 30px;
-  height: 30px;
   padding: 0;
   border: 0 none;
 }

@@ -7,8 +7,16 @@ window.gameTypes = {
 };
 
 window.addEventListener('load', function () {
+  for (var type in window.gameTypes) {
+    var a = document.createElement('a');
+    a.innerHTML = window.gameTypes[type];
+    a.href = '?gameType=' + type;
+    $('#type-select').appendChild(a);
+  }
+
   window.gameType = parseQuery(location.search)['gameType'];
   if (!(window.gameType in window.gameTypes)) {
+    $('#type-select').style.display = 'block';
     return;
   }
   document.title = window.gameTypes[window.gameType];
@@ -41,7 +49,7 @@ function init() {
   resize();
 }
 function initStyle() {
-  $('#submit').style.backgroundColor = localStorage.color;
+  $('#send').style.backgroundColor = localStorage.color;
   $('#ready').style.backgroundColor = localStorage.color;
   $('#content').style.borderTopColor = localStorage.color;
   $('#chat-panel').style.borderLeftColor = localStorage.color;
@@ -130,6 +138,13 @@ function initListeners() {
   $('#change-settings').addEventListener('click', function () {
     $('#settings').style.display = 'block';
   });
+  $('#change-type').addEventListener('click', function () {
+    if (confirm('更改游戏类型将退出当前房间！')) {
+      window.socket.disconnect();
+      window.onbeforeunload = null;
+      $('#type-select').style.display = 'block';
+    }
+  });
   $('#cancel-settings').addEventListener('click', function () {
     $('#settings').style.display = 'none';
   });
@@ -146,7 +161,7 @@ function initBackgroundColor() {
   localStorage.backgroundColor = localStorage.backgroundColor || '#ffffff';
   document.body.style.backgroundColor = localStorage.backgroundColor;
   $('#settings').style.backgroundColor = localStorage.backgroundColor;
-  $('#submit').style.color = localStorage.backgroundColor;
+  $('#send').style.color = localStorage.backgroundColor;
   $('#controls').style.color = localStorage.backgroundColor;
 }
 function handleProgress(active) {
@@ -191,6 +206,6 @@ function parseQuery(qstr) {
 }
 
 /* todo
- * 选择类型
+ * 私人房间
  * 成就
  */

@@ -21,12 +21,15 @@
     <button id="confirm-settings" type="submit">确认</button>
     <button id="cancel-settings" type="button">取消</button>
   </form>
+  <div id="type-select">
+    <p>选择游戏类型：</p>
+  </div>
   <canvas></canvas>
   <div id="chat-panel">
     <ul id="message"></ul>
     <form id="chat">
       <input id="content" type="text" autocomplete="off">
-      <button id="submit" type="submit" title="发送"><i class="fa fa-paper-plane"></i></button>
+      <button id="send" type="submit" title="发送"><i class="fa fa-paper-plane"></i></button>
     </form>
   </div>
   <div id="controls">
@@ -34,6 +37,9 @@
     <div id="out-game-controls">
       <div id="change-settings" title="设置">
         <i class="fa fa-cog fa-lg"></i>
+      </div>
+      <div id="change-type" title="更改游戏类型">
+        <i class="fa fa-arrow-left fa-lg"></i>
       </div>
       <div id="ready">
         准备
@@ -47,7 +53,7 @@
       <div id="progress">
         <div id="progress-inner"></div>
       </div>
-      <div id="skip" title="跳过"><i class="fa fa-arrow-circle-right fa-lg"></i></div>
+      <div id="skip" title="跳过"><i class="fa fa-arrow-right fa-lg"></i></div>
     </div>
   </div>
   <script src="js/Client.js"></script>
