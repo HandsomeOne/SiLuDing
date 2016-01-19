@@ -18,18 +18,28 @@ function handleConnect(socket, Game) {
   socket.on('join', player => {
     socket.player = player;
     socket.player.name = socket.player.name.replace(/<[^>]+>/g, '');
-    socket.room = Game.rooms.findIndex(room => !room.isInGame && room.length < Game.seats);
-    if (socket.room === -1) {
-      socket.room = Game.rooms.push([socket]) - 1;
+    if (socket.player.room) {
+      socket.room = socket.player.room;
     } else {
-      Game.rooms[socket.room].push(socket);
+      socket.room = Game.rooms.findIndex(room => !room.isInGame && room.length < Game.seats);
+      if (socket.room === -1) {
+        socket.room = Game.rooms.length;
+      }
     }
+    Game.rooms[socket.room] = Game.rooms[socket.room] || [];
+    Game.rooms[socket.room].push(socket);
     socket.join(socket.room);
     Game.emitter.to(socket.room).emit('chat', {
       class: 'system join',
       content: `${socket.player.name}进入了房间，目前房间里有${Game.rooms[socket.room].map(socket => socket.player.name).join('，') }`,
       color: socket.player.color,
     });
+    if (socket.player.room && Game.rooms[socket.room].length === 1) {
+      Game.emitter.to(socket.room).emit('chat', {
+        class: 'system hint',
+        content: `将当前网页地址复制给好友，就可以邀请他们进行游戏了哦！`,
+      });
+    }
     preStart(socket.room);
   });
 
@@ -70,15 +80,18 @@ function handleConnect(socket, Game) {
   });
 
   socket.on('disconnect', () => {
-    const i = Game.rooms[socket.room].indexOf(socket);
-    Game.rooms[socket.room].splice(i, 1);
-    socket.leave(socket.room);
     Game.emitter.to(socket.room).emit('chat', {
       class: 'system leave',
       content: `${socket.player.name}离开了房间，目前房间里有${Game.rooms[socket.room].map(socket => socket.player.name).join('，') }`,
       color: socket.player.color,
     });
     clearTimeout(Game.rooms[socket.room].timeout);
+    const i = Game.rooms[socket.room].indexOf(socket);
+    Game.rooms[socket.room].splice(i, 1);
+    if (Game.rooms[socket.room].length === 0) {
+      delete Game.rooms[socket.room];
+    }
+    socket.leave(socket.room);
     delete socket.room;
   });
 

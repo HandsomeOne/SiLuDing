@@ -183,8 +183,9 @@ canvas {
   height: 100%;
 }
 
-#change-settings,
 #change-type,
+#change-settings,
+#create-private-room,
 #background-color {
   width: 30px;
   height: 30px;
@@ -201,6 +202,10 @@ canvas {
 #change-settings {
   background-color: rgba(0,0,0,0.5);
   left: 60px;
+}
+#create-private-room {
+  background-color: rgba(0,0,0,0.75);
+  left: 90px;
 }
 #background-color {
   left: 0;

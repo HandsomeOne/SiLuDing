@@ -14,11 +14,19 @@ window.addEventListener('load', function () {
     $('#type-select').appendChild(a);
   }
 
-  window.gameType = parseQuery(location.search)['gameType'];
+  window.query = parseQuery(location.search);
+  window.gameType = window.query.gameType;
   if (!(window.gameType in window.gameTypes)) {
     $('#type-select').style.display = 'block';
+    document.title = '请选择游戏类型...';
     return;
   }
+
+  window.room = window.query.room;
+  if (window.room) {
+    $('#create-private-room').style.display = 'none';
+  }
+  
   document.title = window.gameTypes[window.gameType];
   initBackgroundColor();
   if (localStorage.name && localStorage.color) {
@@ -63,6 +71,7 @@ function initSocket() {
       id: socket.id,
       name: localStorage.name,
       color: localStorage.color,
+      room: window.room,
     };
     socket.emit('join', player);
   });
@@ -144,6 +153,12 @@ function initListeners() {
       window.socket.disconnect();
       window.onbeforeunload = null;
       $('#type-select').style.display = 'block';
+    }
+  });
+  $('#create-private-room').addEventListener('click', function () {
+    if (confirm('创建私人房间将退出当前房间！')) {
+      window.onbeforeunload = null;
+      location.href = location.search + '&room=' + window.socket.id;
     }
   });
   $('#cancel-settings').addEventListener('click', function () {
