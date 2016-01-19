@@ -94,13 +94,15 @@ function initSocket() {
       handleProgress(data.active);
       if (data.active === window.game.index) {
         var oldTitle = window.gameTypes[window.gameType];
-        window.blink = setInterval(function () {
-          document.title = (document.title === oldTitle) ? '轮到你了！' : oldTitle;
-          if (document.hasFocus()) {
-            document.title = oldTitle;
-            clearInterval(window.blink);
-          }
-        }, 1000);
+        if (!document.hasFocus()) {
+          window.blink = setInterval(function () {
+            document.title = (document.title === oldTitle) ? '轮到你了！' : oldTitle;
+            if (document.hasFocus()) {
+              document.title = oldTitle;
+              clearInterval(window.blink);
+            }
+          }, 1000);
+        }
       } else {
         document.title = window.gameTypes[window.gameType];
         clearInterval(window.blink);
@@ -220,8 +222,3 @@ function parseQuery(qstr) {
   }
   return query;
 }
-
-/* todo
- * 私人房间
- * 成就
- */
