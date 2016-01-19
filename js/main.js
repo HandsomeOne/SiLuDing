@@ -84,7 +84,7 @@ function initSocket() {
     if ('active' in data) {
       handleProgress(data.active);
       if (data.active === window.game.index) {
-        var oldTitle = document.title;
+        var oldTitle = window.gameTypes[window.gameType];
         window.blink = setInterval(function () {
           document.title = (document.title === oldTitle) ? '轮到你了！' : oldTitle;
           if (document.hasFocus()) {
@@ -93,6 +93,7 @@ function initSocket() {
           }
         }, 1000);
       } else {
+        document.title = window.gameTypes[window.gameType];
         clearInterval(window.blink);
       }
     }
