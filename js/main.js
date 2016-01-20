@@ -6,22 +6,19 @@ window.gameTypes = {
   LiuLuDing: '六路顶',
 };
 
-window.addEventListener('load', function () {
-  for (var type in window.gameTypes) {
-    var a = document.createElement('a');
-    a.innerHTML = window.gameTypes[type];
-    a.href = '?gameType=' + type;
-    $('#type-select').appendChild(a);
-  }
+for (var type in window.gameTypes) {
+  var a = document.createElement('a');
+  a.innerHTML = window.gameTypes[type];
+  a.href = '?gameType=' + type;
+  $('#type-select').appendChild(a);
+}
 
-  window.query = parseQuery(location.search);
-  window.gameType = window.query.gameType;
-  if (!(window.gameType in window.gameTypes)) {
-    $('#type-select').style.display = 'block';
-    document.title = '请选择游戏类型...';
-    return;
-  }
-
+window.query = parseQuery(location.search);
+window.gameType = window.query.gameType;
+if (!(window.gameType in window.gameTypes)) {
+  $('#type-select').style.display = 'block';
+  document.title = '请选择游戏类型...';
+} else {
   window.room = window.query.room;
   if (window.room) {
     $('#create-private-room').style.display = 'none';
@@ -48,7 +45,7 @@ window.addEventListener('load', function () {
       init();
     }
   });
-});
+}
 
 function init() {
   initStyle();
