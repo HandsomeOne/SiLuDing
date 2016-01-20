@@ -15,13 +15,15 @@ LiuLuDing.emitter.on('connection', socket => {
 });
 
 function handleConnect(socket, Game) {
+  const getColoredName = Game.getColoredName;
+
   socket.on('join', player => {
     socket.player = player;
     socket.player.name = socket.player.name.replace(/<[^>]+>/g, '');
     if (socket.player.room) {
       socket.room = socket.player.room;
     } else {
-      socket.room = Game.rooms.findIndex(room => !room.isInGame && room.length < Game.seats);
+      socket.room = Game.rooms.findIndex(room => room && !room.isInGame && room.length < Game.seats);
       if (socket.room === -1) {
         socket.room = Game.rooms.length;
       }
@@ -39,13 +41,12 @@ function handleConnect(socket, Game) {
     socket.join(socket.room);
     Game.emitter.to(socket.room).emit('chat', {
       class: 'system join',
-      content: `${socket.player.name}进入了房间，目前房间里有${Game.rooms[socket.room].map(socket => socket.player.name).join('，') }`,
-      color: socket.player.color,
+      content: `${getColoredName(socket) }进入了房间，目前房间里有${Game.rooms[socket.room].map(getColoredName).join('，') }`,
     });
     if (socket.player.room && Game.rooms[socket.room].length < Game.seats) {
       Game.emitter.to(socket.id).emit('chat', {
         class: 'system hint',
-        content: `将当前网页地址复制给好友，就可以邀请他们进行游戏了哦！`,
+        content: `将当前网页地址复制给好友，就可以邀请他们加入游戏了哦！`,
       });
     }
     preStart(socket.room);
@@ -58,8 +59,7 @@ function handleConnect(socket, Game) {
     socket.player.isReady = true;
     Game.emitter.to(socket.room).emit('chat', {
       class: 'system ready',
-      content: `${socket.player.name}已准备`,
-      color: socket.player.color,
+      content: `${getColoredName(socket) }已准备`,
     });
     preStart(socket.room);
   });
@@ -71,8 +71,7 @@ function handleConnect(socket, Game) {
     clearTimeout(Game.rooms[socket.room].timeout);
     Game.emitter.to(socket.room).emit('chat', {
       class: 'system unready',
-      content: `${socket.player.name}取消准备`,
-      color: socket.player.color,
+      content: `${getColoredName(socket) }取消准备`,
     });
   });
   socket.on('chat', content => {
@@ -81,9 +80,7 @@ function handleConnect(socket, Game) {
     }
     Game.emitter.to(socket.room).emit('chat', {
       class: 'user',
-      content: content.replace(/<[^>]+>/g, ''),
-      sender: socket.player.name,
-      color: socket.player.color,
+      content: `<span style="color:${socket.player.color}">${socket.player.name}：${content.replace(/<[^>]+>/g, '') }</span>`,
     });
   });
 
@@ -96,8 +93,7 @@ function handleConnect(socket, Game) {
     Game.rooms[socket.room].splice(i, 1);
     Game.emitter.to(socket.room).emit('chat', {
       class: 'system leave',
-      content: `${socket.player.name}离开了房间，目前房间里有${Game.rooms[socket.room].map(socket => socket.player.name).join('，') }`,
-      color: socket.player.color,
+      content: `${getColoredName(socket) }离开了房间，目前房间里有${Game.rooms[socket.room].map(getColoredName).join('，') }`,
     });
     if (Game.rooms[socket.room].length === 0) {
       delete Game.rooms[socket.room];

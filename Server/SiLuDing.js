@@ -60,8 +60,7 @@ class SiLuDing {
     const self = this.game;
     self.emitter.to(self.room).emit('chat', {
       class: 'system surrender',
-      content: `${this.player.name}投降了`,
-      color: this.player.color,
+      content: `${self.constructor.getColoredName(this) }投降了`,
     });
     self.killPlayer(this.index);
   }
@@ -159,8 +158,7 @@ class SiLuDing {
     }
     this.emitter.to(this.room).emit('chat', {
       class: 'system kill',
-      content: `${this.sockets[index].player.name}被击败了`,
-      color: this.sockets[index].player.color,
+      content: `${this.constructor.getColoredName(this.sockets[index]) }被击败了`,
     });
     this.sockets[index].player.isKilled = true;
     this.survivals -= 1;
@@ -190,13 +188,15 @@ class SiLuDing {
     this.emitter.to(this.room).emit('gameOver', this.winner);
     this.emitter.to(this.room).emit('chat', {
       class: 'system gameover',
-      content: `游戏结束，${this.sockets[this.winner].player.name}获胜`,
-      color: this.sockets[this.winner].player.color,
+      content: `游戏结束，${this.constructor.getColoredName(this.sockets[this.winner]) }获胜`,
     });
   }
 }
 SiLuDing.rooms = [];
 SiLuDing.pawns = 4;
 SiLuDing.seats = 2;
+SiLuDing.getColoredName = function (socket) {
+  return `<span style="color:${socket.player.color}">${socket.player.name}</span>`;
+};
 
 module.exports = SiLuDing;

@@ -101,8 +101,8 @@ canvas {
   list-style: none;
   padding: 5px;
 }
-#message li.system {
-  background-color: rgba(0,0,0,0.25);
+#message li i {
+  opacity: 0.5;
 }
 #content {
   box-sizing: border-box;

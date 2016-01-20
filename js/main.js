@@ -26,7 +26,7 @@ window.addEventListener('load', function () {
   if (window.room) {
     $('#create-private-room').style.display = 'none';
   }
-  
+
   document.title = window.gameTypes[window.gameType];
   initBackgroundColor();
   if (localStorage.name && localStorage.color) {
@@ -84,8 +84,10 @@ function initSocket() {
   socket.on('chat', function (data) {
     var li = document.createElement('li');
     data.class && (li.className = data.class);
-    li.innerHTML = (data.sender ? data.sender + '：' : '<i class="fa fa-info-circle fa-lg"></i> ') + data.content;
-    data.color && (li.style.color = data.color);
+    li.innerHTML = data.content;
+    if (data.class.indexOf('system') !== -1) {
+      li.innerHTML = '<i class="fa fa-info-circle fa-lg"></i> ' + li.innerHTML;
+    }
     $('#message').appendChild(li);
     li.scrollIntoView();
   });
