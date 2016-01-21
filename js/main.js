@@ -1,5 +1,9 @@
 'use strict';
 
+if (screen) {
+  screen.lockOrientation && screen.lockOrientation('landscape');
+  screen.msLockOrientation && screen.msLockOrientation('landscape');
+}
 window.host = 'http://localhost:9527/';
 window.gameTypes = {
   SiLuDing: '四路顶',

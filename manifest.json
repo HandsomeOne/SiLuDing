@@ -1,0 +1,10 @@
+{
+  "name": "四路顶",
+  "description": "",
+  "icons": {
+    "128": ""
+  },
+  "display": "fullscreen",
+  "fullscreen": "true",
+  "orientation": "landscape"
+}
