@@ -10,8 +10,8 @@ body {
   height: 100%;
   width: 100%;
   font-size: 12px;
-  min-width: 500px;
-  min-height: 300px;
+  min-width: 350px;
+  min-height: 200px;
 }
 input::-moz-focus-inner {
   border: 0;
@@ -82,7 +82,7 @@ canvas {
 #chat-panel {
   box-sizing: border-box;
   width: 20%;
-  min-width: 200px;
+  min-width: 150px;
   line-height: 20px;
   height: 100%;
   border-left: 1px solid transparent;
