@@ -20,6 +20,7 @@ function handleConnect(socket, Game) {
   socket.on('join', player => {
     socket.player = player;
     socket.player.name = socket.player.name.replace(/<[^>]+>/g, '');
+    socket.player.color = socket.player.color.replace(/<[^>]+>/g, '');
     if (socket.player.room) {
       socket.room = socket.player.room;
     } else {
