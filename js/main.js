@@ -1,6 +1,6 @@
 'use strict';
 
-window.host = 'localhost';
+window.host = 'http://localhost:9527/';
 window.gameTypes = {
   SiLuDing: '四路顶',
   LiuLuDing: '六路顶',
@@ -61,7 +61,7 @@ function initStyle() {
   $('#cancel-settings').style.display = 'block';
 }
 function initSocket() {
-  window.socket = window.io('http://' + window.host + ':9527/' + window.gameType);
+  window.socket = window.io(window.host + window.gameType);
   var socket = window.socket;
   socket.on('connect', function () {
     var player = {
