@@ -180,6 +180,7 @@ function initListeners() {
 }
 function initBackgroundColor() {
   localStorage.backgroundColor = localStorage.backgroundColor || '#ffffff';
+  $('#background-color').value = localStorage.backgroundColor;
   document.body.style.backgroundColor = localStorage.backgroundColor;
   $('#settings').style.backgroundColor = localStorage.backgroundColor;
   $('#send').style.color = localStorage.backgroundColor;
