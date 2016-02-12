@@ -216,7 +216,7 @@ LiuLuDingClient.prototype = assign(Object.create(SiLuDingClient.prototype), {
       }
     }
   },
-  distance(i1, j1, i2, j2) {
+  distance: function (i1, j1, i2, j2) {
     var d_i = i2 - i1;
     var d_j = j2 - j1;
     return Math.max(Math.abs(d_i), Math.abs(d_j), Math.abs(d_i - d_j));

@@ -1,9 +1,12 @@
 'use strict';
 
-if (screen) {
-  screen.lockOrientation && screen.lockOrientation('landscape');
-  screen.msLockOrientation && screen.msLockOrientation('landscape');
+try {
+  screen.lockOrientation('landscape');
+  screen.msLockOrientation('landscape');
+} catch (e) {
+  console.log(e);
 }
+
 window.host = 'http://localhost:9527/';
 window.gameTypes = {
   SiLuDing: '四路顶',
@@ -212,7 +215,7 @@ function resize() {
   $('#controls').style.width = w + 'px';
 }
 function getRandomColor() {
-  return `#${Math.floor(Math.random() * 256 * 256 * 256).toString(16) }`;
+  return '#' + Math.floor(Math.random() * 256 * 256 * 256).toString(16);
 }
 function $(selector) {
   return document.querySelector(selector);
