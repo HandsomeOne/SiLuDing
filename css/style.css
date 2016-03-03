@@ -186,16 +186,17 @@ canvas {
 #change-type,
 #change-settings,
 #create-private-room,
-#background-color {
+#background-color,
+#fork-me-on-github {
   width: 30px;
   height: 30px;
   position: absolute;
   top: -30px;
-  left: 30px;
   cursor: pointer;
 }
 #change-type {
   background-color: rgba(0,0,0,0.25);  
+  left: 30px;
 }
 #change-settings:hover .fa {
   -webkit-animation: fa-spin 2s infinite linear;
@@ -215,4 +216,12 @@ canvas {
   display: block;
   padding: 0;
   border: 0 none;
+}
+#fork-me-on-github {
+  right: 0;
+  color: #333;
+  transition: color 0.2s;
+}
+#fork-me-on-github:hover {
+  color: #4078c0;
 }
