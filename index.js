@@ -1,6 +1,30 @@
 'use strict';
 
-const io = require('socket.io')(9527);
+const fs = require('fs');
+const app = require('http').createServer(function (req, res) {
+  fs.readFile(__dirname + '/client' + req.url.split('?')[0],
+    function (err, data) {
+      if (err) {
+        fs.readFile(__dirname + '/client' + '/index.html',
+          function (err, data) {
+            if (err) {
+              res.writeHead(500);
+              res.end();
+            } else {
+              res.writeHead(200);
+              res.end(data);
+            }
+          }
+        );
+      } else {
+        res.writeHead(200);
+        res.end(data);
+      }
+    }
+  );
+});
+const io = require('socket.io')(app);
+app.listen(80);
 
 const SiLuDing = require('./game/SiLuDing');
 SiLuDing.emitter = io.of('/SiLuDing');
@@ -42,7 +66,7 @@ function handleConnect(socket, Game) {
     socket.join(socket.room);
     Game.emitter.to(socket.room).emit('chat', {
       class: 'system join',
-      content: `${getColoredName(socket) }进入了房间，目前房间里有${Game.rooms[socket.room].map(getColoredName).join('，') }`,
+      content: `${getColoredName(socket)}进入了房间，目前房间里有${Game.rooms[socket.room].map(getColoredName).join('，')}`,
     });
     if (socket.player.room && Game.rooms[socket.room].length < Game.seats) {
       Game.emitter.to(socket.id).emit('chat', {
@@ -60,7 +84,7 @@ function handleConnect(socket, Game) {
     socket.player.isReady = true;
     Game.emitter.to(socket.room).emit('chat', {
       class: 'system ready',
-      content: `${getColoredName(socket) }已准备`,
+      content: `${getColoredName(socket)}已准备`,
     });
     preStart(socket.room);
   });
@@ -72,7 +96,7 @@ function handleConnect(socket, Game) {
     clearTimeout(Game.rooms[socket.room].timeout);
     Game.emitter.to(socket.room).emit('chat', {
       class: 'system unready',
-      content: `${getColoredName(socket) }取消准备`,
+      content: `${getColoredName(socket)}取消准备`,
     });
   });
   socket.on('chat', content => {
@@ -81,7 +105,7 @@ function handleConnect(socket, Game) {
     }
     Game.emitter.to(socket.room).emit('chat', {
       class: 'user',
-      content: `<span style="color:${socket.player.color}">${socket.player.name}：${content.replace(/<[^>]+>/g, '') }</span>`,
+      content: `<span style="color:${socket.player.color}">${socket.player.name}：${content.replace(/<[^>]+>/g, '')}</span>`,
     });
   });
 
@@ -94,7 +118,7 @@ function handleConnect(socket, Game) {
     Game.rooms[socket.room].splice(i, 1);
     Game.emitter.to(socket.room).emit('chat', {
       class: 'system leave',
-      content: `${getColoredName(socket) }离开了房间，目前房间里有${Game.rooms[socket.room].map(getColoredName).join('，') }`,
+      content: `${getColoredName(socket)}离开了房间，目前房间里有${Game.rooms[socket.room].map(getColoredName).join('，')}`,
     });
     if (Game.rooms[socket.room].length === 0) {
       delete Game.rooms[socket.room];

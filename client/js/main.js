@@ -7,7 +7,6 @@ try {
   console.log(e);
 }
 
-window.host = 'http://localhost:9527/';
 window.gameTypes = {
   SiLuDing: '四路顶',
   LiuLuDing: '六路顶',
@@ -68,7 +67,7 @@ function initStyle() {
   $('#cancel-settings').style.display = 'block';
 }
 function initSocket() {
-  window.socket = window.io(window.host + window.gameType);
+  window.socket = window.io(location.origin + '/' + window.gameType);
   var socket = window.socket;
   socket.on('connect', function () {
     var player = {
