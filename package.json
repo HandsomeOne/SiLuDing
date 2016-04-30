@@ -1,0 +1,23 @@
+{
+  "name": "siluding",
+  "version": "1.0.0",
+  "description": "A folk chess popular in eastern China, powered by socket.io.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HandsomeOne/SiLuDing.git"
+  },
+  "author": "handsomeOne",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HandsomeOne/SiLuDing/issues"
+  },
+  "homepage": "https://github.com/HandsomeOne/SiLuDing#readme",
+  "dependencies": {
+    "socket.io": "^1.4.5"
+  }
+}

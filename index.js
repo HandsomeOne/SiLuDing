@@ -2,13 +2,13 @@
 
 const io = require('socket.io')(9527);
 
-const SiLuDing = require('./SiLuDing');
+const SiLuDing = require('./game/SiLuDing');
 SiLuDing.emitter = io.of('/SiLuDing');
 SiLuDing.emitter.on('connection', socket => {
   handleConnect(socket, SiLuDing);
 });
 
-const LiuLuDing = require('./LiuLuDing');
+const LiuLuDing = require('./game/LiuLuDing');
 LiuLuDing.emitter = io.of('/LiuLuDing');
 LiuLuDing.emitter.on('connection', socket => {
   handleConnect(socket, LiuLuDing);
