@@ -38,6 +38,7 @@ function SiLuDing(socket, data, canvas) {
   this.print();
 }
 SiLuDing.prototype = {
+  constructor: SiLuDing,
   update: function (data) {
     var self = this.game;
     assign(self, data);
@@ -119,7 +120,7 @@ SiLuDing.prototype = {
       self.from = { i: i, j: j };
       self.print();
     } else if (self.from) {
-      var distance = self.distance(self.from.i, self.from.j, i, j);
+      var distance = self.constructor.getDistance(self.from.i, self.from.j, i, j);
       if (distance === 0) {
         delete self.from;
         self.print();
@@ -135,16 +136,16 @@ SiLuDing.prototype = {
   surrender: function () {
     this.socket.emit('surrender');
   },
-  distance: function (i1, j1, i2, j2) {
-    return Math.abs(i1 - i2) + Math.abs(j1 - j2);
-  },
+};
+SiLuDing.getDistance = function (i1, j1, i2, j2) {
+  return Math.abs(i1 - i2) + Math.abs(j1 - j2);
 };
 
 function LiuLuDing(socket, data, canvas) {
   SiLuDing.call(this, socket, data, canvas);
 }
 LiuLuDing.prototype = assign(Object.create(SiLuDing.prototype), {
-  letructor: LiuLuDing,
+  constructor: LiuLuDing,
   print: function () {
     var h = this.canvas.height;
     var ctx = this.canvas.getContext('2d');
@@ -206,7 +207,7 @@ LiuLuDing.prototype = assign(Object.create(SiLuDing.prototype), {
       self.from = { i: i, j: j };
       self.print();
     } else if (self.from) {
-      var distance = self.distance(self.from.i, self.from.j, i, j);
+      var distance = self.constructor.getDistance(self.from.i, self.from.j, i, j);
       if (distance === 0) {
         delete self.from;
         self.print();
@@ -216,9 +217,9 @@ LiuLuDing.prototype = assign(Object.create(SiLuDing.prototype), {
       }
     }
   },
-  distance: function (i1, j1, i2, j2) {
-    var d_i = i2 - i1;
-    var d_j = j2 - j1;
-    return Math.max(Math.abs(d_i), Math.abs(d_j), Math.abs(d_i - d_j));
-  },
 });
+LiuLuDing.getDistance = function (i1, j1, i2, j2) {
+  var d_i = i2 - i1;
+  var d_j = j2 - j1;
+  return Math.max(Math.abs(d_i), Math.abs(d_j), Math.abs(d_i - d_j));
+};

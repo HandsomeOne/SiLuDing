@@ -2,40 +2,38 @@
 
 const fs = require('fs');
 const app = require('http').createServer(function (req, res) {
-  fs.readFile(__dirname + '/client' + req.url.split('?')[0],
-    function (err, data) {
-      if (err) {
-        fs.readFile(__dirname + '/client' + '/index.html',
-          function (err, data) {
-            if (err) {
-              res.writeHead(500);
-              res.end();
-            } else {
-              res.writeHead(200);
-              res.end(data);
-            }
-          }
-        );
-      } else {
-        res.writeHead(200);
-        res.end(data);
-      }
+  fs.readFile(__dirname + '/client' + req.url.split('?')[0], (err, data) => {
+    if (err) {
+      fs.readFile(__dirname + '/client' + '/index.html', (err, data) => {
+        if (err) {
+          res.writeHead(404);
+          res.end(err.message);
+        } else {
+          res.writeHead(200);
+          res.end(data);
+        }
+      });
+    } else {
+      res.writeHead(200);
+      res.end(data);
     }
-  );
+  });
 });
 const io = require('socket.io')(app);
 app.listen(80);
 
-const SiLuDing = require('./game/SiLuDing');
-SiLuDing.emitter = io.of('/SiLuDing');
-SiLuDing.emitter.on('connection', socket => {
-  handleConnect(socket, SiLuDing);
-});
-
-const LiuLuDing = require('./game/LiuLuDing');
-LiuLuDing.emitter = io.of('/LiuLuDing');
-LiuLuDing.emitter.on('connection', socket => {
-  handleConnect(socket, LiuLuDing);
+fs.readdir('./game', function (err, files) {
+  if (err) {
+    console.log(err.message);
+  } else {
+    files.forEach(file => {
+      const game = require('./game/' + file);
+      game.emitter = io.of('/' + file.split('.')[0]);
+      game.emitter.on('connection', socket => {
+        handleConnect(socket, game);
+      });
+    });
+  }
 });
 
 function handleConnect(socket, Game) {
@@ -105,7 +103,7 @@ function handleConnect(socket, Game) {
     }
     Game.emitter.to(socket.room).emit('chat', {
       class: 'user',
-      content: `<span style="color:${socket.player.color}">${socket.player.name}：${content.replace(/<[^>]+>/g, '')}</span>`,
+      content: `<span style="color:${socket.player.color}">${socket.player.name}：${HTMLEntities(content)}</span>`,
     });
   });
 
@@ -144,4 +142,12 @@ function handleConnect(socket, Game) {
       }
     }
   }
+}
+
+function HTMLEntities(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }

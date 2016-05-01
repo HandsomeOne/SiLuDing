@@ -58,8 +58,9 @@ function initStyle() {
   $('#chat-panel').style.borderLeftColor = localStorage.color;
   $('#cancel-settings').style.display = 'block';
 }
+var socket, game, blink;
 function initSocket() {
-  window.socket = io(location.origin + '/' + gameType);
+  socket = io(location.origin + '/' + gameType);
   socket.on('connect', function () {
     socket.emit('join', {
       id: socket.id,
@@ -69,7 +70,7 @@ function initSocket() {
     });
   });
   socket.on('start', function (data) {
-    window.game = new window[gameType](socket, data, $('canvas'));
+    game = new window[gameType](socket, data, $('canvas'));
     $('#out-game-controls').style.display = 'none';
     $('#in-game-controls').style.display = 'block';
     handleProgress(data.active);
@@ -178,6 +179,7 @@ function initBackgroundColor() {
   $('#send').style.color = localStorage.backgroundColor;
   $('#controls').style.color = localStorage.backgroundColor;
 }
+var interval;
 function handleProgress(active) {
   clearInterval(interval);
   $('#skip').style.backgroundColor = (active === game.index) ? localStorage.color : 'rgba(0,0,0,0.25)';
