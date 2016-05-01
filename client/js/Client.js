@@ -11,7 +11,7 @@ function assign(target, source) {
   return target;
 }
 
-function SiLuDingClient(socket, data, canvas) {
+function SiLuDing(socket, data, canvas) {
   this.socket = socket;
   this.socket.game = this;
   this.socket.removeListener('update', this.update);
@@ -37,7 +37,7 @@ function SiLuDingClient(socket, data, canvas) {
   this.canvas.height = this.canvas.width;
   this.print();
 }
-SiLuDingClient.prototype = {
+SiLuDing.prototype = {
   update: function (data) {
     var self = this.game;
     assign(self, data);
@@ -140,11 +140,11 @@ SiLuDingClient.prototype = {
   },
 };
 
-function LiuLuDingClient(socket, data, canvas) {
-  SiLuDingClient.call(this, socket, data, canvas);
+function LiuLuDing(socket, data, canvas) {
+  SiLuDing.call(this, socket, data, canvas);
 }
-LiuLuDingClient.prototype = assign(Object.create(SiLuDingClient.prototype), {
-  letructor: LiuLuDingClient,
+LiuLuDing.prototype = assign(Object.create(SiLuDing.prototype), {
+  letructor: LiuLuDing,
   print: function () {
     var h = this.canvas.height;
     var ctx = this.canvas.getContext('2d');

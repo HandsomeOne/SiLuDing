@@ -69,7 +69,7 @@ function initSocket() {
     });
   });
   socket.on('start', function (data) {
-    window.game = new window[gameType + 'Client'](socket, data, $('canvas'));
+    window.game = new window[gameType](socket, data, $('canvas'));
     $('#out-game-controls').style.display = 'none';
     $('#in-game-controls').style.display = 'block';
     handleProgress(data.active);
