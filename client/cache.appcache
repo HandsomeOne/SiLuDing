@@ -1,0 +1,17 @@
+CACHE MANIFEST
+# v1 - 2016-05-02
+
+js/main.js
+js/client.js
+css/style.css
+css/font-awesome.min.css
+fonts/FontAwesome.otf
+fonts/fontawesome-webfont.eot
+fonts/fontawesome-webfont.svg
+fonts/fontawesome-webfont.ttf
+fonts/fontawesome-webfont.woff
+fonts/fontawesome-webfont.woff2
+https://cdn.socket.io/socket.io-1.4.5.js
+
+NETWORK:
+*
