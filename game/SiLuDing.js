@@ -2,16 +2,17 @@
 
 class SiLuDing {
   constructor(room, emitter) {
+    const Game = this.constructor;
     this.room = room;
-    clearTimeout(this.constructor.rooms[this.room].timeout);
-    this.constructor.rooms[this.room].isInGame = true;
-    this.sockets = this.constructor.rooms[this.room].slice(0, this.constructor.seats);
+    clearTimeout(Game.rooms[this.room].timeout);
+    Game.rooms[this.room].isInGame = true;
+    this.sockets = Game.rooms[this.room].slice(0, Game.seats);
     this.survivals = this.sockets.length;
     this.initGrid();
     this.active = Math.floor(Math.random() * this.survivals);
     this.sockets.forEach((socket, i) => {
       socket.game = this;
-      socket.player.pawns = this.constructor.pawns;
+      socket.player.pawns = Game.pawns;
       delete socket.player.isReady;
       delete socket.player.isKilled;
 
@@ -45,30 +46,30 @@ class SiLuDing {
     this.timeout = setTimeout(this.turn.bind(this), 30000);
   }
   skip() {
-    const self = this.game;
-    if (!self.isOver) {
-      self.turn();
+    const game = this.game;
+    if (!game.isOver) {
+      game.turn();
     }
   }
   surrender() {
-    const self = this.game;
-    self.emitter.to(self.room).emit('chat', {
+    const game = this.game;
+    game.emitter.to(game.room).emit('chat', {
       className: 'system surrender',
       content: `&${this.index}投降了`,
     });
-    self.killPlayer(this.index);
+    game.killPlayer(this.index);
   }
   disconnect() {
-    const self = this.game;
-    self.killPlayer(this.index);
+    const game = this.game;
+    game.killPlayer(this.index);
   }
   go(data) {
-    const self = this.game;
-    self.grid[data.from.i][data.from.j] = null;
-    self.grid[data.to.i][data.to.j] = self.active;
-    self.check(data.to.i, data.to.j);
-    if (!self.isOver) {
-      self.turn();
+    const game = this.game;
+    game.grid[data.from.i][data.from.j] = null;
+    game.grid[data.to.i][data.to.j] = game.active;
+    game.check(data.to.i, data.to.j);
+    if (!game.isOver) {
+      game.turn();
     }
   }
   turn() {

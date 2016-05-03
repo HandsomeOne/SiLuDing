@@ -200,7 +200,7 @@ LiuLuDing.prototype = assign(Object.create(SiLuDing.prototype), {
     var y = e.clientY - self.canvas.getBoundingClientRect().top;
     var i = Math.floor((y / d - 3.5) / sin60 + 3.5);
     var j = Math.floor(x / d + (i - 3) / 2);
-    if (self.distance(i, j, 3, 3) > 3) {
+    if (self.constructor.getDistance(i, j, 3, 3) > 3) {
       return;
     }
     if (!self.from && self.active === self.grid[i][j]) {

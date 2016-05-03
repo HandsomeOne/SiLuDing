@@ -49,8 +49,10 @@ function handleConnect(socket, Game) {
         socket.room = Game.rooms.length;
       }
     }
-    Game.rooms[socket.room] = Game.rooms[socket.room] || [];
-    if (Game.rooms[socket.room].length >= Game.seats) {
+    const room = Game.rooms[socket.room] || [];
+    Game.rooms[socket.room] = room;
+
+    if (room.length >= Game.seats) {
       Game.emitter.to(socket.id).emit('chat', {
         className: 'system error',
         content: `房间已满，加入失败`,
@@ -58,17 +60,17 @@ function handleConnect(socket, Game) {
       delete socket.room;
       return;
     }
-    socket.index = Game.rooms[socket.room].length;
-    Game.rooms[socket.room].push(socket);
+    socket.index = room.length;
+    room.push(socket);
     socket.join(socket.room);
-    if (!Game.rooms[socket.room].isInGame) {
-      Game.emitter.to(socket.room).emit('updatePlayers', Game.rooms[socket.room].map(socket => socket.player));
+    if (!room.isInGame) {
+      Game.emitter.to(socket.room).emit('updatePlayers', room.map(socket => socket.player));
     }
     Game.emitter.to(socket.room).emit('chat', {
       className: 'system join',
-      content: `&${socket.index}进入了房间，目前房间里有${Game.rooms[socket.room].length}人`,
+      content: `&${socket.index}进入了房间，目前房间里有${room.length}人`,
     });
-    if (socket.player.room && Game.rooms[socket.room].length < Game.seats) {
+    if (socket.player.room && room.length < Game.seats) {
       Game.emitter.to(socket.id).emit('chat', {
         className: 'system hint',
         content: `将当前网页地址复制给好友，就可以邀请他们加入游戏了哦！`,
@@ -113,20 +115,21 @@ function handleConnect(socket, Game) {
     if (socket.room === undefined) {
       return;
     }
-    clearTimeout(Game.rooms[socket.room].timeout);
-    const i = Game.rooms[socket.room].indexOf(socket);
-    Game.rooms[socket.room].splice(i, 1);
-    Game.rooms[socket.room].forEach((socket, index) => {
+    const room = Game.rooms[socket.room];
+    clearTimeout(room.timeout);
+    const i = room.indexOf(socket);
+    room.splice(i, 1);
+    room.forEach((socket, index) => {
       socket.index = index;
     });
     Game.emitter.to(socket.room).emit('chat', {
       className: 'system leave',
-      content: `&${socket.index}离开了房间，目前房间里还剩${Game.rooms[socket.room].length}人`,
+      content: `&${socket.index}离开了房间，目前房间里还剩${room.length}人`,
     });
-    if (!Game.rooms[socket.room].isInGame) {
-      Game.emitter.to(socket.room).emit('updatePlayers', Game.rooms[socket.room].map(socket => socket.player));
+    if (!room.isInGame) {
+      Game.emitter.to(socket.room).emit('updatePlayers', room.map(socket => socket.player));
     }
-    if (Game.rooms[socket.room].length === 0) {
+    if (room.length === 0) {
       delete Game.rooms[socket.room];
     }
     socket.leave(socket.room);
