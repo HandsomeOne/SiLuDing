@@ -11,10 +11,9 @@ class SiLuDing {
     this.active = Math.floor(Math.random() * this.survivals);
     this.sockets.forEach((socket, i) => {
       socket.game = this;
-      socket.index = i;
+      socket.player.pawns = this.constructor.pawns;
       delete socket.player.isReady;
       delete socket.player.isKilled;
-      socket.player.pawns = this.constructor.pawns;
 
       socket.removeListener('go', this.go);
       socket.on('go', this.go);
@@ -37,15 +36,10 @@ class SiLuDing {
   start() {
     this.emitter.to(this.room).emit('start', {
       grid: this.grid,
-      players: this.sockets.map(socket => ({
-        id: socket.player.id,
-        name: socket.player.name,
-        color: socket.player.color,
-      })),
       active: this.active,
     });
     this.emitter.to(this.room).emit('chat', {
-      class: 'system start',
+      className: 'system start',
       content: '游戏开始',
     });
     this.timeout = setTimeout(this.turn.bind(this), 30000);
@@ -59,8 +53,8 @@ class SiLuDing {
   surrender() {
     const self = this.game;
     self.emitter.to(self.room).emit('chat', {
-      class: 'system surrender',
-      content: `${self.constructor.getColoredName(this) }投降了`,
+      className: 'system surrender',
+      content: `&${this.index}投降了`,
     });
     self.killPlayer(this.index);
   }
@@ -106,9 +100,9 @@ class SiLuDing {
       return;
     }
 
-    if (line[offset - 1].value === null
-      || line[offset].value !== this.active
-      || line[offset + 1].value === null) {
+    if (line[offset - 1].value === null ||
+      line[offset].value !== this.active ||
+      line[offset + 1].value === null) {
       return;
     }
 
@@ -152,13 +146,13 @@ class SiLuDing {
       this.killPlayer(index);
     }
   }
-  killPlayer(index) {
+  killPlayer(index, isDisconnect) {
     if (this.sockets[index].player.isKilled) {
       return;
     }
     this.emitter.to(this.room).emit('chat', {
-      class: 'system kill',
-      content: `${this.constructor.getColoredName(this.sockets[index]) }被击败了`,
+      className: 'system kill',
+      content: `&${index}被击败了`,
     });
     this.sockets[index].player.isKilled = true;
     this.survivals -= 1;
@@ -174,7 +168,6 @@ class SiLuDing {
     this.isOver = true;
     this.winner = this.sockets.findIndex(socket => !socket.player.isKilled);
     clearTimeout(this.timeout);
-    delete this.constructor.rooms[this.room].isInGame;
     this.sockets.forEach(socket => {
       socket.removeListener('go', this.go);
       socket.removeListener('skip', this.skip);
@@ -187,16 +180,14 @@ class SiLuDing {
     });
     this.emitter.to(this.room).emit('gameOver', this.winner);
     this.emitter.to(this.room).emit('chat', {
-      class: 'system gameover',
-      content: `游戏结束，${this.constructor.getColoredName(this.sockets[this.winner]) }获胜`,
+      className: 'system gameover',
+      content: `游戏结束，&${this.winner}获胜`,
     });
+    delete this.constructor.rooms[this.room].isInGame;
   }
 }
 SiLuDing.rooms = [];
 SiLuDing.pawns = 4;
 SiLuDing.seats = 2;
-SiLuDing.getColoredName = function (socket) {
-  return `<span style="color:${socket.player.color}">${socket.player.name}</span>`;
-};
 
 module.exports = SiLuDing;

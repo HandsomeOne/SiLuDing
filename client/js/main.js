@@ -58,7 +58,7 @@ function initStyle() {
   $('#chat-panel').style.borderLeftColor = localStorage.color;
   $('#cancel-settings').style.display = 'block';
 }
-var socket, game, blink;
+var socket, players, game, blink;
 function initSocket() {
   socket = io(location.origin + '/' + gameType);
   socket.on('connect', function () {
@@ -70,16 +70,25 @@ function initSocket() {
     });
   });
   socket.on('start', function (data) {
+    data.players = players;
     game = new window[gameType](socket, data, $('canvas'));
     $('#out-game-controls').style.display = 'none';
     $('#in-game-controls').style.display = 'block';
     handleProgress(data.active);
   });
+  socket.on('updatePlayers', function (data) {
+    players = data;
+  });
   socket.on('chat', function (data) {
     var li = document.createElement('li');
-    data.class && (li.className = data.class);
-    li.innerHTML = data.content;
-    if (data.class.indexOf('system') !== -1) {
+    if ('className' in data) {
+      li.className = data.className;
+    }
+    li.innerHTML = data.content.replace(/&\d+/g, function (match) {
+      var index = match.slice(1);
+      return '<span style="color:' + players[index].color + '">' + players[index].name + '</span>';
+    });
+    if (data.className.indexOf('system') !== -1) {
       li.innerHTML = '<i class="fa fa-info-circle fa-lg"></i> ' + li.innerHTML;
     }
     $('#message').appendChild(li);

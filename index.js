@@ -37,12 +37,10 @@ fs.readdir('./game', function (err, files) {
 });
 
 function handleConnect(socket, Game) {
-  const getColoredName = Game.getColoredName;
-
   socket.on('join', player => {
     socket.player = player;
-    socket.player.name = socket.player.name.replace(/<[^>]+>/g, '');
-    socket.player.color = socket.player.color.replace(/<[^>]+>/g, '');
+    socket.player.name = HTMLEntities(socket.player.name);
+    socket.player.color = HTMLEntities(socket.player.color);
     if (socket.player.room) {
       socket.room = socket.player.room;
     } else {
@@ -54,21 +52,25 @@ function handleConnect(socket, Game) {
     Game.rooms[socket.room] = Game.rooms[socket.room] || [];
     if (Game.rooms[socket.room].length >= Game.seats) {
       Game.emitter.to(socket.id).emit('chat', {
-        class: 'system error',
+        className: 'system error',
         content: `房间已满，加入失败`,
       });
       delete socket.room;
       return;
     }
+    socket.index = Game.rooms[socket.room].length;
     Game.rooms[socket.room].push(socket);
     socket.join(socket.room);
+    if (!Game.rooms[socket.room].isInGame) {
+      Game.emitter.to(socket.room).emit('updatePlayers', Game.rooms[socket.room].map(socket => socket.player));
+    }
     Game.emitter.to(socket.room).emit('chat', {
-      class: 'system join',
-      content: `${getColoredName(socket)}进入了房间，目前房间里有${Game.rooms[socket.room].map(getColoredName).join('，')}`,
+      className: 'system join',
+      content: `&${socket.index}进入了房间，目前房间里有${Game.rooms[socket.room].length}人`,
     });
     if (socket.player.room && Game.rooms[socket.room].length < Game.seats) {
       Game.emitter.to(socket.id).emit('chat', {
-        class: 'system hint',
+        className: 'system hint',
         content: `将当前网页地址复制给好友，就可以邀请他们加入游戏了哦！`,
       });
     }
@@ -81,8 +83,8 @@ function handleConnect(socket, Game) {
     }
     socket.player.isReady = true;
     Game.emitter.to(socket.room).emit('chat', {
-      class: 'system ready',
-      content: `${getColoredName(socket)}已准备`,
+      className: 'system ready',
+      content: `&${socket.index}已准备`,
     });
     preStart(socket.room);
   });
@@ -93,8 +95,8 @@ function handleConnect(socket, Game) {
     delete socket.player.isReady;
     clearTimeout(Game.rooms[socket.room].timeout);
     Game.emitter.to(socket.room).emit('chat', {
-      class: 'system unready',
-      content: `${getColoredName(socket)}取消准备`,
+      className: 'system unready',
+      content: `&${socket.index}取消准备`,
     });
   });
   socket.on('chat', content => {
@@ -102,8 +104,8 @@ function handleConnect(socket, Game) {
       return;
     }
     Game.emitter.to(socket.room).emit('chat', {
-      class: 'user',
-      content: `<span style="color:${socket.player.color}">${socket.player.name}：${HTMLEntities(content)}</span>`,
+      className: 'user',
+      content: `&${socket.index}：${HTMLEntities(content)}</span>`,
     });
   });
 
@@ -114,10 +116,16 @@ function handleConnect(socket, Game) {
     clearTimeout(Game.rooms[socket.room].timeout);
     const i = Game.rooms[socket.room].indexOf(socket);
     Game.rooms[socket.room].splice(i, 1);
-    Game.emitter.to(socket.room).emit('chat', {
-      class: 'system leave',
-      content: `${getColoredName(socket)}离开了房间，目前房间里有${Game.rooms[socket.room].map(getColoredName).join('，')}`,
+    Game.rooms[socket.room].forEach((socket, index) => {
+      socket.index = index;
     });
+    Game.emitter.to(socket.room).emit('chat', {
+      className: 'system leave',
+      content: `&${socket.index}离开了房间，目前房间里还剩${Game.rooms[socket.room].length}人`,
+    });
+    if (!Game.rooms[socket.room].isInGame) {
+      Game.emitter.to(socket.room).emit('updatePlayers', Game.rooms[socket.room].map(socket => socket.player));
+    }
     if (Game.rooms[socket.room].length === 0) {
       delete Game.rooms[socket.room];
     }
@@ -128,16 +136,16 @@ function handleConnect(socket, Game) {
   function preStart(roomId) {
     const room = Game.rooms[roomId];
     if (!room.isInGame && room.length === Game.seats) {
-      const notReady = room.filter(socket => !socket.player.isReady).length;
-      if (notReady === 0) {
+      const notReady = room.filter(socket => !socket.player.isReady);
+      if (notReady.length === 0) {
         new Game(socket.room, Game.emitter);
-      } else if (notReady === 1) {
+      } else if (notReady.length === 1) {
         room.timeout = setTimeout(() => {
           new Game(socket.room, Game.emitter);
         }, 10000);
         Game.emitter.to(socket.room).emit('chat', {
-          class: 'system prestart',
-          content: `仅剩一位玩家未准备，游戏将在10秒后开始`,
+          className: 'system prestart',
+          content: `仅剩&${notReady[0].index}未准备，游戏将在10秒后开始`,
         });
       }
     }
