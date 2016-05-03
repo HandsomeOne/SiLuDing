@@ -60,7 +60,6 @@ function handleConnect(socket, Game) {
       delete socket.room;
       return;
     }
-    socket.index = room.length;
     room.push(socket);
     socket.join(socket.room);
     if (!room.isInGame) {
@@ -68,7 +67,7 @@ function handleConnect(socket, Game) {
     }
     Game.emitter.to(socket.room).emit('chat', {
       className: 'system join',
-      content: `&${socket.index}进入了房间，目前房间里有${room.length}人`,
+      content: `&{${socket.player.id}}进入了房间，目前房间里有${room.length}人`,
     });
     if (socket.player.room && room.length < Game.seats) {
       Game.emitter.to(socket.id).emit('chat', {
@@ -86,7 +85,7 @@ function handleConnect(socket, Game) {
     socket.player.isReady = true;
     Game.emitter.to(socket.room).emit('chat', {
       className: 'system ready',
-      content: `&${socket.index}已准备`,
+      content: `&{${socket.player.id}}已准备`,
     });
     preStart(socket.room);
   });
@@ -98,7 +97,7 @@ function handleConnect(socket, Game) {
     clearTimeout(Game.rooms[socket.room].timeout);
     Game.emitter.to(socket.room).emit('chat', {
       className: 'system unready',
-      content: `&${socket.index}取消准备`,
+      content: `&{${socket.player.id}}取消准备`,
     });
   });
   socket.on('chat', content => {
@@ -107,7 +106,7 @@ function handleConnect(socket, Game) {
     }
     Game.emitter.to(socket.room).emit('chat', {
       className: 'user',
-      content: `&${socket.index}：${HTMLEntities(content)}</span>`,
+      content: `&{${socket.player.id}}：${HTMLEntities(content)}</span>`,
     });
   });
 
@@ -119,12 +118,9 @@ function handleConnect(socket, Game) {
     clearTimeout(room.timeout);
     const i = room.indexOf(socket);
     room.splice(i, 1);
-    room.forEach((socket, index) => {
-      socket.index = index;
-    });
     Game.emitter.to(socket.room).emit('chat', {
       className: 'system leave',
-      content: `&${socket.index}离开了房间，目前房间里还剩${room.length}人`,
+      content: `&{${socket.player.id}}离开了房间，目前房间里还剩${room.length}人`,
     });
     if (!room.isInGame) {
       Game.emitter.to(socket.room).emit('updatePlayers', room.map(socket => socket.player));
@@ -148,7 +144,7 @@ function handleConnect(socket, Game) {
         }, 10000);
         Game.emitter.to(socket.room).emit('chat', {
           className: 'system prestart',
-          content: `仅剩&${notReady[0].index}未准备，游戏将在10秒后开始`,
+          content: `仅剩&{${notReady[0].player.id}}未准备，游戏将在10秒后开始`,
         });
       }
     }

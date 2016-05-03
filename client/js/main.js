@@ -84,9 +84,12 @@ function initSocket() {
     if ('className' in data) {
       li.className = data.className;
     }
-    li.innerHTML = data.content.replace(/&\d+/g, function (match) {
-      var index = match.slice(1);
-      return '<span style="color:' + players[index].color + '">' + players[index].name + '</span>';
+    li.innerHTML = data.content.replace(/&\{.*?\}/g, function (match) {
+      var id = match.slice(2, -1);
+      var player = players.find(function (player) {
+        return player.id === id;
+      });
+      return '<span style="color:' + player.color + '">' + player.name + '</span>';
     });
     if (data.className.indexOf('system') !== -1) {
       li.innerHTML = '<i class="fa fa-info-circle fa-lg"></i> ' + li.innerHTML;

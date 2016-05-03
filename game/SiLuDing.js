@@ -11,6 +11,7 @@ class SiLuDing {
     this.initGrid();
     this.active = Math.floor(Math.random() * this.survivals);
     this.sockets.forEach((socket, i) => {
+      socket.index = i;
       socket.game = this;
       socket.player.pawns = Game.pawns;
       delete socket.player.isReady;
@@ -55,7 +56,7 @@ class SiLuDing {
     const game = this.game;
     game.emitter.to(game.room).emit('chat', {
       className: 'system surrender',
-      content: `&${this.index}投降了`,
+      content: `&{${this.player.id}}投降了`,
     });
     game.killPlayer(this.index);
   }
@@ -153,7 +154,7 @@ class SiLuDing {
     }
     this.emitter.to(this.room).emit('chat', {
       className: 'system kill',
-      content: `&${index}被击败了`,
+      content: `&{${this.sockets[index].player.id}}被击败了`,
     });
     this.sockets[index].player.isKilled = true;
     this.survivals -= 1;
@@ -167,7 +168,7 @@ class SiLuDing {
   }
   gameOver() {
     this.isOver = true;
-    this.winner = this.sockets.findIndex(socket => !socket.player.isKilled);
+    this.winner = this.sockets.find(socket => !socket.player.isKilled).player.id;
     clearTimeout(this.timeout);
     this.sockets.forEach(socket => {
       socket.removeListener('go', this.go);
@@ -182,7 +183,7 @@ class SiLuDing {
     this.emitter.to(this.room).emit('gameOver', this.winner);
     this.emitter.to(this.room).emit('chat', {
       className: 'system gameover',
-      content: `游戏结束，&${this.winner}获胜`,
+      content: `游戏结束，&{${this.winner}}获胜`,
     });
     delete this.constructor.rooms[this.room].isInGame;
   }
