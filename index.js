@@ -4,7 +4,7 @@ const fs = require('fs');
 const app = require('http').createServer(function (req, res) {
   fs.readFile(__dirname + '/client' + req.url.split('?')[0], (err, data) => {
     if (err) {
-      fs.readFile(__dirname + '/client' + '/index.html', (err, data) => {
+      fs.readFile(__dirname + '/client/index.html', (err, data) => {
         if (err) {
           res.writeHead(404);
           res.end(err.message);

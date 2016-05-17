@@ -148,7 +148,7 @@ class SiLuDing {
       this.killPlayer(index);
     }
   }
-  killPlayer(index, isDisconnect) {
+  killPlayer(index) {
     if (this.sockets[index].player.isKilled) {
       return;
     }

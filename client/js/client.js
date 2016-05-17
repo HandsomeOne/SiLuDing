@@ -50,7 +50,7 @@ SiLuDing.prototype = {
     self.active = active;
     self.print();
   },
-  gameOver: function (winner) {
+  gameOver: function () {
     var self = this.game;
     self.canvas.removeEventListener('click', self.click);
   },

@@ -5,6 +5,7 @@ var gameTypes = {
   LiuLuDing: '六路顶',
 };
 
+/* jshint -W089 */
 for (var type in gameTypes) {
   var a = document.createElement('a');
   a.innerHTML = gameTypes[type];
@@ -60,6 +61,7 @@ function initStyle() {
 }
 var socket, players, game, blink;
 function initSocket() {
+  /* global io:false */
   socket = io(location.origin + '/' + gameType);
   socket.on('connect', function () {
     socket.emit('join', {
@@ -117,7 +119,7 @@ function initSocket() {
       }
     }
   });
-  socket.on('gameOver', function (winner) {
+  socket.on('gameOver', function () {
     $('#in-game-controls').style.display = 'none';
     $('#out-game-controls').style.display = 'block';
     $('#unready').style.display = 'none';
