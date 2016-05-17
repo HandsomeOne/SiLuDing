@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# v3 - 2016-05-03
+# v4 - 2016-05-17
 
 js/main.js
 js/client.js
@@ -11,7 +11,7 @@ fonts/fontawesome-webfont.svg
 fonts/fontawesome-webfont.ttf
 fonts/fontawesome-webfont.woff
 fonts/fontawesome-webfont.woff2
-https://cdn.socket.io/socket.io-1.4.5.js
+http://cdn.bootcss.com/socket.io/1.4.5/socket.io.min.js
 
 NETWORK:
 *
