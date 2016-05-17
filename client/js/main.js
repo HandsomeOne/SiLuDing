@@ -5,25 +5,24 @@ var gameTypes = {
   LiuLuDing: '六路顶',
 };
 
-/* jshint -W089 */
-for (var type in gameTypes) {
+Object.keys(gameTypes).forEach(function (type) {
   var a = document.createElement('a');
   a.innerHTML = gameTypes[type];
-  a.href = '?gameType=' + type;
+  a.href = '/' + type;
   $('#type-select').appendChild(a);
-}
+});
 
-var query = parseQuery(location.search);
-var gameType = query.gameType;
-if (!(gameType in gameTypes)) {
+var query = location.pathname.split('/');
+var type = query[1], room = query[2];
+if (!(type in gameTypes)) {
   $('#type-select').style.display = 'block';
   document.title = '请选择游戏类型...';
 } else {
-  if (query.room) {
+  if (room) {
     $('#create-private-room').style.display = 'none';
   }
 
-  document.title = gameTypes[gameType];
+  document.title = gameTypes[type];
   initBackgroundColor();
   if (localStorage.name && localStorage.color) {
     $('#settings').style.display = 'none';
@@ -62,18 +61,18 @@ function initStyle() {
 var socket, players, game, blink;
 function initSocket() {
   /* global io:false */
-  socket = io(location.origin + '/' + gameType);
+  socket = io(location.origin + '/' + type);
   socket.on('connect', function () {
     socket.emit('join', {
       id: socket.id,
       name: localStorage.name,
       color: localStorage.color,
-      room: query.room,
+      room: room,
     });
   });
   socket.on('start', function (data) {
     data.players = players;
-    game = new window[gameType](socket, data, $('canvas'));
+    game = new window[type](socket, data, $('canvas'));
     $('#out-game-controls').style.display = 'none';
     $('#in-game-controls').style.display = 'block';
     handleProgress(data.active);
@@ -103,7 +102,7 @@ function initSocket() {
     if ('active' in data) {
       handleProgress(data.active);
       if (data.active === game.index) {
-        var oldTitle = gameTypes[gameType];
+        var oldTitle = gameTypes[type];
         if (!document.hasFocus()) {
           blink = setInterval(function () {
             document.title = (document.title === oldTitle) ? '轮到你了！' : oldTitle;
@@ -114,7 +113,7 @@ function initSocket() {
           }, 1000);
         }
       } else {
-        document.title = gameTypes[gameType];
+        document.title = gameTypes[type];
         clearInterval(blink);
       }
     }
@@ -124,6 +123,9 @@ function initSocket() {
     $('#out-game-controls').style.display = 'block';
     $('#unready').style.display = 'none';
     $('#ready').style.display = 'block';
+    document.title = gameTypes[type];
+    clearInterval(blink);
+    clearInterval(interval);
   });
 }
 
@@ -170,7 +172,7 @@ function initListeners() {
   $('#create-private-room').addEventListener('click', function () {
     if (confirm('创建私人房间将退出当前房间！')) {
       onbeforeunload = null;
-      location.href = location.search + '&room=' + socket.id;
+      location.href += '/' + socket.id;
     }
   });
   $('#cancel-settings').addEventListener('click', function () {
@@ -224,13 +226,4 @@ function getRandomColor() {
 }
 function $(selector) {
   return document.querySelector(selector);
-}
-function parseQuery(qstr) {
-  var query = {};
-  var a = qstr.substr(1).split('&');
-  for (var i = 0; i < a.length; i++) {
-    var b = a[i].split('=');
-    query[decodeURIComponent(b[0])] = decodeURIComponent(b[1] || '');
-  }
-  return query;
 }
