@@ -1,4 +1,4 @@
-# [四路顶（走四棋儿）](http://siluding.daoapp.io/?gameType=SiLuDing)
+# [四路顶（走四棋儿）](https://siluding.daoapp.io/SiLuDing)
 
 在鲁南、苏北地区的田间，常常见到一对老少爷们蹲在地上，下一种四子棋。在地上纵横各画四条直线，就是棋盘；棋子也不讲究，随手找个石块、木棍之类的东西，就是棋子。这种棋在鲁南地区叫做走四棋儿，在苏北地区叫做四路顶。
 
@@ -24,8 +24,8 @@
 
 首次进入会要求你选择昵称和代表色，之后也可以点击左下角齿轮更改。如果你只想和朋友玩，也可以点击左下角锁状图标创建房间，再把地址发给朋友们。
 
-# [六路顶](http://siluding.daoapp.io/?gameType=LiuLuDing)
+# [六路顶](https://siluding.daoapp.io/LiuLuDing)
 
 四路顶的变种，使用六边形棋盘，可以供三个人下。
 
-# [相关文章](http://handsomeone.com/blog/trying-to-develop-a-game/)
+# [相关文章](https://handsomeone.com/blog/trying-to-develop-a-game/)
