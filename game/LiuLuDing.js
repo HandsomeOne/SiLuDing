@@ -7,13 +7,13 @@ class LiuLuDing extends SiLuDing {
   }
   initGrid() {
     this.grid = [
-      new Array(4).fill(0),
-      new Array(5).fill(null),
-      new Array(6).fill(null),
-      [1].concat(new Array(5).fill(null)).concat([2]),
-      [null, 1].concat(new Array(4).fill(null)).concat([2]),
-      new Array(2).fill(null).concat([1]).concat(new Array(3).fill(null)).concat([2]),
-      new Array(3).fill(null).concat([1]).concat(new Array(2).fill(null)).concat([2]),
+      [0, 0, 0, 0],
+      [null, null, null, null, null],
+      [null, null, null, null, null, null],
+      [1, null, null, null, null, null, 2],
+      [null, 1, null, null, null, null, 2],
+      [null, null, 1, null, null, null, 2],
+      [null, null, null, 1, null, null, 2],
     ];
   }
   check(i, j) {

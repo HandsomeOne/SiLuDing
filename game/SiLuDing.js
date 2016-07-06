@@ -29,10 +29,10 @@ class SiLuDing {
   }
   initGrid() {
     this.grid = [
-      new Array(4).fill(0),
-      new Array(4).fill(null),
-      new Array(4).fill(null),
-      new Array(4).fill(1),
+      [0, 0, 0, 0],
+      [null, null, null, null],
+      [null, null, null, null],
+      [1, 1, 1, 1],
     ];
   }
   start() {
