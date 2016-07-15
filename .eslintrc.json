@@ -1,0 +1,14 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 6
+  },
+  "env": {
+    "node": true
+  },
+  "extends": "eslint:recommended",
+  "rules": {
+    "curly": "warn",
+    "eqeqeq": "warn",
+    "no-console": "off"
+  }
+}
